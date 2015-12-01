@@ -136,18 +136,22 @@ def main(params):
     batadv_graph = graph.merge_nodes(batadv_graph)
     batadv_graph = graph.to_undirected(batadv_graph)
 
-    # write processed data to dest dir
-    with open(nodes_fn, 'w') as f:
+    # write processed data to temporary files in dest dir
+    # and rename them atomically to prevent inconsistent data 
+    with open(nodes_fn + '.tmp', 'w') as f:
         json.dump(nodedb, f)
+    os.rename(nodes_fn + '.tmp', nodes_fn)
 
     graph_out = {'batadv': json_graph.node_link_data(batadv_graph),
                  'version': GRAPH_VERSION}
 
-    with open(graph_fn, 'w') as f:
+    with open(graph_fn + '.tmp', 'w') as f:
         json.dump(graph_out, f)
+    os.rename(graph_fn + '.tmp', graph_fn)
 
-    with open(nodelist_fn, 'w') as f:
+    with open(nodelist_fn + 'tmp', 'w') as f:
         json.dump(export_nodelist(now, nodedb), f)
+    os.rename(nodelist_fn + '.tmp', nodelist_fn)
 
     # optional rrd graphs (trigger with --rrd)
     if params['rrd']:
