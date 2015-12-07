@@ -137,7 +137,7 @@ def main(params):
     batadv_graph = graph.to_undirected(batadv_graph)
 
     # write processed data to temporary files in dest dir
-    # and rename them atomically to prevent inconsistent data 
+    # and rename them atomically to prevent inconsistent data
     with open(nodes_fn + '.tmp', 'w') as f:
         json.dump(nodedb, f)
     os.rename(nodes_fn + '.tmp', nodes_fn)
